@@ -1,39 +1,37 @@
 " Vim tab plugin enhancement
 set showtabline=2
-set guitablabel =%{GuiTabLabel()}
 
 " Set up tab labels with tab number, buffer name, number of windows
 "
-function! GuiTabLabel()
-    let label = ''
-    let bufnrlist = tabpagebuflist(v:lnum)
-    " Add '+' if one of the buffers in the tab pages is modified
-    for bufnr in bufnrlist
-        if getbufvar(bufnr, "&modified")
-            let label = '+'
-            break
-        endif
-    endfor
-    " Append the tab number
-    let label .= v:lnum . ': '
-    " Append the buffer name
-    let name = bufname(bufnrlist[tabpagewinnr(v:lnum) - 1])
-    if name == ''
-        " give a name to no-name documents
-        if &buftype == 'quickfix'
-            let name = '[Quickfix List]'
-        else
-            let name = '[No Name]'
-        endif
-    else
-        " get only the file name
-        let name = fnamemodify(name, ':t')
-    endif
-    let label .= name
-    " Append the number of windows in the tab page
-    let wincount = tabpagewinnr(v:lnum, '$')
-    retrun label . '  [' . wincount . ']'
-endfunction
+if exists("+showtabline")
+     function MyTabLine()
+         let s = ''
+         let t = tabpagenr()
+         let i = 1
+         while i <= tabpagenr('$')
+             let buflist = tabpagebuflist(i)
+             let winnr = tabpagewinnr(i)
+             let s .= '%' . i . 'T'
+             let s .= (i == t ? '%1*' : '%2*')
+             let s .= ' '
+             let s .= i . ')'
+             let s .= ' %*'
+             let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+             let file = bufname(buflist[winnr - 1])
+             let file = fnamemodify(file, ':p:t')
+             if file == ''
+                 let file = '[No Name]'
+             endif
+             let s .= file
+             let i = i + 1
+         endwhile
+         let s .= '%T%#TabLineFill#%='
+         let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+         return s
+     endfunction
+     set stal=2
+     set tabline=%!MyTabLine()
+endif
 
 " Let vim support Alt+n to switch tabs
 function! BufPos_Initialize()
