@@ -1,5 +1,5 @@
 " Vim tab plugin enhancement
-set showtabline = 2
+set showtabline=2
 set guitablabel =%{GuiTabLabel()}
 
 " Set up tab labels with tab number, buffer name, number of windows
