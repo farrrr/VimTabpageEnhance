@@ -4,7 +4,7 @@ set showtabline=2
 " Set up tab labels with tab number, buffer name, number of windows
 "
 if exists("+showtabline")
-     function MyTabLine()
+     function MyTabPageLine()
          let s = ''
          let t = tabpagenr()
          let i = 1
@@ -30,7 +30,7 @@ if exists("+showtabline")
          return s
      endfunction
      set stal=2
-     set tabline=%!MyTabLine()
+     set tabline=%!MyTabPageLine()
 endif
 
 " Let vim support Alt+n to switch tabs
